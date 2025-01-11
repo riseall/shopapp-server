@@ -51,3 +51,27 @@ exports.addToCart = (req, res) => {
       });
     });
 };
+
+exports.removeFromCart = (req, res) => {
+  const id = Number(req.params.id);
+  const productCode = String(req.params.product);
+
+  Order.updateOne(
+    {
+      user_id: id,
+    },
+    {
+      $pull: {
+        cart_items: productCode,
+      },
+    }
+  )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(409).send({
+        message: err.message,
+      });
+    });
+};
